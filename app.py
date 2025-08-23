@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, redirect, url_for
 from config import conectar, desconectar
 import psycopg2
 
-
 app = Flask(__name__)
 
 @app.route("/THE_PINK_DREAM")
@@ -12,7 +11,7 @@ def index():
 @app.route("/THE_PINK_DREAM/registro", methods=["GET","POST"])
 def registrar():
     if request.method=="POST":
-        id=request.form["id"]
+        documento=request.form["documento"]
         nombre_completo=request.form["nombre_completo"]
         email=request.form["email"]
         contraseña=request.form["contraseña"]
@@ -21,7 +20,7 @@ def registrar():
             cursor=conexion.cursor()
             consulta= """
             INSERT INTO registro (id, nombre_completo, email, contraseña) VALUES (%s, %s, %s, %s);"""
-            datos=(id, nombre_completo, email, contraseña)
+            datos=(documento, nombre_completo, email, contraseña)
             cursor.execute(consulta, datos)
             conexion.commit()
             print("Usuario registrado exitosamente")
