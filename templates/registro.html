@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar usuario</title>
 
+    {% include 'bootstrap.html' %}
+
     <script>
       function mostrarPassword() {
           var obj = document.getElementById("contraseña");
@@ -16,8 +18,6 @@
           obj.type = "password";
       }
     </script>
-
-    {% include 'bootstrap.html' %}
     
 </head>
 <body>
