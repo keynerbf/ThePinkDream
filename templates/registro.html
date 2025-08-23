@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar usuario</title>
+
+    <script>
+      function mostrarPassword() {
+          var obj = document.getElementById("contraseña");
+          obj.type = "text";
+      }
+      function ocultarPassword() {
+          var obj = document.getElementById("contraseña");
+          obj.type = "password";
+      }
+    </script>
+
+    {% include 'bootstrap.html' %}
+    
+</head>
+<body>
+
+  {% include 'menu.html' %}
+
+  <div class="container mt-5">
+        <h1 class="mb-4">Registrar usuario</h1>
+
+        <form action="/THE_PINK_DREAM/registro" method="post">
+
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" class="form-control" id="id" name="id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre_completo">Nombre completo:</label>
+                <input type="text" class="form-control" id="nombre_completo" name="nombre_completo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contraseña">Contraseña:</label>
+                <input type="text" class="form-control" id="contraseña" name="contraseña" required>
+                <img src="/static/eye.png" height="50px" width="50px" alt="Mostrar contraseña"
+                onmouseover="mostrarPassword()"
+                onmouseout="ocultarPassword()">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Registrar usuario</button>
+            <a href="/THE_PINK_DREAM" class="btn btn-primary">Ir al inicio</a>
+        </form>
+  </div>
+</body>
+</html>
+
