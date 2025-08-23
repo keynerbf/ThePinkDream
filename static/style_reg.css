@@ -1,0 +1,25 @@
+.formulario_general{
+    width: 100%;
+}
+.formulario_titulo{
+    width: 50%;
+}
+.formulario_entrada_general{
+    width: 50%;
+    display: list-item;
+    list-style-type: none;
+    list-style: none;
+}
+.formulario_entrada_individual{
+    width: 200%;
+    justify-content: left;
+    display: inline-flexbox;
+    list-style-type: inherit;
+}
+label {
+    color: palevioletred;
+    text-align: left;
+    margin: 20px;
+    font-size: 25px;
+    line-height: 1.6;
+}

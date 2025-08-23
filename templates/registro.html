@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="/static/style_reg.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar usuario</title>
 
@@ -24,34 +24,38 @@
 
   {% include 'menu.html' %}
 
-  <div class="container mt-5">
-        <h1 class="mb-4">Registrar usuario</h1>
+  <div class="formulario_general">
+        <h1 class="formulario_titulo">Registrar usuario</h1>
 
-        <form name="formRegistro" action="/THE_PINK_DREAM/registro" method="post" 
-
-            <div class="form-group">
+        <form name="formRegistro" action="/THE_PINK_DREAM/registro" method="post">
+        
+        <div class="formulario_entrada_general">
+            
+            <div class="formulario_entrada_individual">
                 <label for="documento">Documento:</label>
                 <input type="text" class="form-control" id="documento" name="documento" required>
             </div>
 
-            <div class="form-group">
+            <div class="formulario_entrada_individual">
                 <label for="nombre_completo">Nombre completo:</label>
                 <input type="text" class="form-control" id="nombre_completo" name="nombre_completo" required>
             </div>
 
-            <div class="form-group">
+            <div class="formulario_entrada_individual">
                 <label for="email">Email:</label>
                 <input type="text" class="form-control" id="email" name="email" required>
             </div>
 
-            <div class="form-group">
+            
+            <div class="formulario_entrada_individual">
                 <label for="contraseña">Contraseña:</label>
-                <input type="text" class="form-control" id="contraseña" name="contraseña" required>
+                <input type="password" class="form-control" id="contraseña" name="contraseña" required>
                 <img src="/static/eye.png" height="50px" width="50px" alt="Mostrar contraseña"
                 onmouseover="mostrarPassword()"
                 onmouseout="ocultarPassword()">
             </div>
-
+            
+        </div>
             <button type="submit" class="btn btn-primary">Registrar usuario</button>
             <a href="/THE_PINK_DREAM" class="btn btn-primary">Ir al inicio</a>
         </form>
