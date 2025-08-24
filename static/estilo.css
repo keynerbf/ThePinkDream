@@ -109,21 +109,6 @@ h3 {
 }
 
 
-@media (max-width: 768px) {
-    nav ul li a {
-        padding: 10px;
-    }
-
-    table {
-        width: 100%;
-    }
-
-    img {
-        width: 100%; 
-        height: auto; 
-    }
-}
-
 .redes-sociales {
     display: flex;
     justify-content: center;
@@ -223,8 +208,26 @@ header p {
     padding-bottom: 20px;
 }
 
-@media (max-width: 768px) {
-    .catalogo {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
+/* Menú en pantallas grandes */
+@media (min-width: 992px) {
+  .custom-navbar {
+    background-color: beige !important;
+  }
+  .custom-navbar .nav-link {
+    color: #333 !important;
+    padding: 0.7rem 1rem;
+  }
 }
+/* Menú en móviles (cuando se abre la hamburguesa) */
+@media (max-width: 991px) {
+  .custom-navbar .navbar-collapse {
+    background-color: beige;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .custom-navbar .nav-link {
+    display: block;
+    margin: 0.3rem 0;
+  }
+}
+
