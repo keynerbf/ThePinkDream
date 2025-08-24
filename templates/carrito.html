@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito</title>
+  {% include 'bootstrap.html' %}
+</head>
+<body>
+  {% include 'menu.html' %}
+
+  <div class="container mt-5">
+    <h2>Tu Carrito</h2>
+    {% if carrito %}
+      <ul class="list-group mb-3">
+        {% for item in carrito %}
+          <li class="list-group-item d-flex justify-content-between">
+            {{ item.nombre }} - ${{ item.precio }}
+            <a href="/THE_PINK_DREAM/eliminar_carrito/{{ loop.index0 }}" class="btn btn-danger btn-sm">Eliminar</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+<form method="POST" action="/THE_PINK_DREAM/finalizar_compra">
+  <div class="form-group">
+    <label for="direccion">Dirección de envío:</label>
+    <input type="text" name="direccion" id="direccion" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="pago">Método de pago:</label>
+    <input type="text" name="pago" id="pago" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label for="num_pago">Número del método de pago:</label>
+    <input type="text" name="num_pago" id="num_pago" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Finalizar compra</button>
+</form>
+    {% else %}
+      <p>No has agregado productos al carrito.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
