@@ -30,7 +30,7 @@ def registrar():
                 alert('✅ El usuario fue registrado con éxito!');
                 setTimeout(function() {
                     window.location.href = '/THE_PINK_DREAM';
-                }, 2000);
+                }, 1000);
             </script>
             """
         except (Exception, psycopg2.Error) as error:
