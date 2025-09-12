@@ -16,8 +16,9 @@
                     <a class="nav-link" href="/THE_PINK_DREAM/cerrar_sesion">Cerrar sesión</a>
                 </li>
                 <li class="nav-item">
-                    <span class="nav-link">👤 Bienvenido, {{ session['nombre'] }}</span>
+                    <a class="nav-link" href="/THE_PINK_DREAM/perfil">👤 Bienvenido, {{ session['nombre'] }}</a>
                 </li>
+
             {% else %}
                 <!-- Mostrar solo si el usuario NO está logueado -->
                 <li class="nav-item">
@@ -29,8 +30,18 @@
             {% endif %}
 
             <li class="nav-item">
-                <a class="nav-link" href="/THE_PINK_DREAM/carrito">🛒 Carrito</a>
-            </li>
+  <a class="nav-link" href="/THE_PINK_DREAM/carrito">
+    🛒 Carrito
+    {% if session.get('carrito') %}
+      <span class="badge badge-pill badge-success">
+        {{ session['carrito']|length }}
+      </span>
+    {% else %}
+      <span class="badge badge-pill badge-secondary">0</span>
+    {% endif %}
+  </a>
+</li>
+
         </ul>
     </div>
 </nav>

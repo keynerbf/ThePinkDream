@@ -207,6 +207,10 @@ header p {
     margin: 0;
     padding-bottom: 20px;
 }
+.badge {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+}
 
 /* Menú en pantallas grandes */
 @media (min-width: 992px) {

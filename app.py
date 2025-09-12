@@ -48,8 +48,10 @@ def iniciar_sesion():
         try:
             conn = conectar()
             cur = conn.cursor()
-            cur.execute("SELECT id, nombre_completo FROM registro WHERE id=%s AND contraseña=%s", 
-                        (documento, contraseña))
+            cur.execute(
+                "SELECT id, nombre_completo FROM registro WHERE id=%s AND contraseña=%s", 
+                (documento, contraseña)
+            )
             usuario = cur.fetchone()
             cur.close()
             conn.close()
@@ -57,7 +59,9 @@ def iniciar_sesion():
             if usuario:
                 session["usuario"] = usuario[0]   # documento
                 session["nombre"] = usuario[1]    # nombre
-                return redirect(url_for("index"))
+                if "carrito" not in session:
+                    session["carrito"] = []       # inicializar carrito vacío
+                return redirect(url_for("index"))  # <-- ahora dentro del if
             else:
                 return """
                 <script>
@@ -73,6 +77,7 @@ def iniciar_sesion():
             </script>
             """
     return render_template("iniciar_sesion.html")
+
 
 
 @app.route("/THE_PINK_DREAM/catalogo")
@@ -118,6 +123,82 @@ def ramo(ramo_id):
     ramo = productos.get(ramo_id)
     return render_template("ramo.html", ramo=ramo)
 
+
+@app.route("/THE_PINK_DREAM/perfil")
+def perfil():
+    if "usuario" not in session:
+        flash("⚠️ Debes iniciar sesión para acceder a tu perfil", "error")
+        return redirect(url_for("iniciar_sesion"))
+    return render_template("perfil.html")
+
+@app.route("/THE_PINK_DREAM/modificar_nombre", methods=["POST"])
+def modificar_nombre():
+    if "usuario" not in session:
+        return redirect(url_for("iniciar_sesion"))
+
+    nuevo_nombre = request.form["nombre"]
+    usuario_id = session["usuario"]
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute("UPDATE registro SET nombre_completo=%s WHERE id=%s", (nuevo_nombre, usuario_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        session["nombre"] = nuevo_nombre  # actualizar en sesión también
+        flash("✅ Nombre actualizado correctamente", "success")
+    except Exception as e:
+        flash(f"⚠️ Error al actualizar el nombre: {e}", "error")
+
+    return redirect(url_for("perfil"))
+
+@app.route("/THE_PINK_DREAM/modificar_contraseña", methods=["POST"])
+def modificar_contraseña():
+    if "usuario" not in session:
+        return redirect(url_for("iniciar_sesion"))
+
+    nueva_contraseña = request.form["nueva_contraseña"]
+    usuario_id = session["usuario"]
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute("UPDATE registro SET contraseña=%s WHERE id=%s", (nueva_contraseña, usuario_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        flash("✅ Contraseña actualizada correctamente", "success")
+    except Exception as e:
+        flash(f"⚠️ Error al actualizar la contraseña: {e}", "error")
+
+    return redirect(url_for("perfil"))
+
+@app.route("/THE_PINK_DREAM/eliminar_usuario", methods=["POST"])
+def eliminar_usuario():
+    if "usuario" not in session:
+        return redirect(url_for("iniciar_sesion"))
+
+    usuario_id = session["usuario"]
+
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM registro WHERE id=%s", (usuario_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # cerrar sesión al eliminar
+        session.clear()
+        flash("🗑️ Usuario eliminado correctamente", "success")
+    except Exception as e:
+        flash(f"⚠️ Error al eliminar el usuario: {e}", "error")
+
+    return redirect(url_for("index"))
+
 # ---------------- CARRITO ----------------
 @app.route("/THE_PINK_DREAM/agregar_carrito/<int:ramo_id>")
 def agregar_carrito(ramo_id):
@@ -144,14 +225,17 @@ def agregar_carrito(ramo_id):
 
     session["carrito"].append(productos[ramo_id])
     session.modified = True
-    return redirect(url_for("carrito"))
+    return redirect(url_for("catalogo"))
 
 @app.route("/THE_PINK_DREAM/carrito")
 def carrito():
     if "usuario" not in session:
         flash("⚠️ Debes iniciar sesión para acceder al carrito", "error")
         return redirect(url_for("iniciar_sesion"))
-    return render_template("carrito.html", carrito=session.get("carrito", []))
+    
+    carrito = session.get("carrito", [])
+    total = sum(item["precio"] for item in carrito)
+    return render_template("carrito.html", carrito=carrito, total=total)
 
 @app.route("/THE_PINK_DREAM/eliminar_carrito/<int:index>")
 def eliminar_carrito(index):
@@ -194,7 +278,7 @@ def finalizar_compra():
         conn = conectar()
         cur = conn.cursor()
         cur.execute("""
-            INSERT INTO pagos (usuario_id, direccion, metodo_pago, num_metodo_pago, productos)
+            INSERT INTO pedidos (usuario_id, direccion, metodo_pago, num_metodo_pago, productos)
             VALUES (%s, %s, %s, %s, %s)
             """, (usuario_id, direccion, metodo_pago, num_pago, productos_texto))
 

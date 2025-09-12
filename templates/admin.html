@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin</title>
+  {% include 'bootstrap.html' %}
+</head>
+<body>
+  {% include 'menu.html' %}
+
+  <div class="container mt-4">
+    <h2>⚙️ Panel de Administración</h2>
+
+    <!-- USUARIOS -->
+    <h3 class="mt-4">👥 Usuarios</h3>
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in usuarios %}
+        <tr>
+          <td>{{ u[0] }}</td>
+          <td>{{ u[1] }}</td>
+          <td>{{ u[2] }}</td>
+          <td>{{ u[3] }}</td>
+          <td>
+            <a href="/THE_PINK_DREAM/admin/editar_usuario/{{ u[0] }}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="/THE_PINK_DREAM/admin/eliminar_usuario/{{ u[0] }}" 
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('⚠️ ¿Seguro que deseas eliminar este usuario?')">Eliminar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- PEDIDOS -->
+    <h3 class="mt-4">🛒 Pedidos</h3>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th><th>Usuario</th><th>Productos</th><th>Dirección</th><th>Pago</th><th>Fecha</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in pedidos %}
+        <tr>
+          <td>{{ p[0] }}</td>
+          <td>{{ p[1] }}</td>
+          <td>{{ p[4] }}</td>
+          <td>{{ p[2] }}</td>
+          <td>{{ p[3] }}</td>
+          <td>{{ p[5] }}</td>
+          <td>
+            <a href="/THE_PINK_DREAM/admin/eliminar_pedido/{{ p[0] }}" 
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('⚠️ ¿Seguro que deseas eliminar este pedido?')">Eliminar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
