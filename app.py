@@ -229,34 +229,63 @@ def admin_productos():
     conn.close()
     return render_template("admin_productos.html", base=base, ofertas=ofertas, nuevos=nuevos)
 
-@app.route("/THE_PINK_DREAM/admin/agregar_producto", methods=["GET","POST"])
+@app.route("/THE_PINK_DREAM/admin/agregar_producto", methods=["GET", "POST"])
 @admin_required
 def agregar_producto():
-    if request.method=="POST":
-        nombre=request.form["nombre"]
-        descripcion=request.form["descripcion"]
-        precio=float(request.form["precio"])
-        imagen=request.form["imagen"]
-        categoria=request.form["categoria"]
-        tabla={"base":"productos_base","ofertas":"productos_ofertas","nuevos":"productos_nuevos"}.get(categoria,"productos_base")
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        descripcion = request.form["descripcion"]
+        precio = float(request.form["precio"])
+        imagen = request.form["imagen"]
+        categoria = request.form["categoria"]  # "base", "ofertas", "nuevos"
+
+        tabla = {
+            "base": "productos_base",
+            "ofertas": "productos_ofertas",
+            "nuevos": "productos_nuevos"
+        }.get(categoria, "productos_base")
+
         try:
-            conn=conectar()
-            cur=conn.cursor()
-            if tabla=="productos_ofertas":
-                descuento=float(request.form.get("descuento",0))
-                cur.execute(f"INSERT INTO {tabla} (nombre, descripcion, precio, imagen, descuento) VALUES (%s,%s,%s,%s,%s)",
-                    (nombre, descripcion, precio, imagen, descuento))
+            conn = conectar()
+            cur = conn.cursor()
+
+            # -------------------
+            # Calcular ID automático
+            # -------------------
+            cur.execute("SELECT MAX(id) FROM productos_base")
+            max_base = cur.fetchone()[0] or 0
+
+            cur.execute("SELECT MAX(id) FROM productos_ofertas")
+            max_ofertas = cur.fetchone()[0] or 0
+
+            cur.execute("SELECT MAX(id) FROM productos_nuevos")
+            max_nuevos = cur.fetchone()[0] or 0
+
+            nuevo_id = max(max_base, max_ofertas, max_nuevos) + 1
+            # -------------------
+
+            if tabla == "productos_ofertas":
+                descuento = float(request.form.get("descuento", 0))
+                cur.execute(f"""
+                    INSERT INTO {tabla} (id, nombre, descripcion, precio, imagen, descuento)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (nuevo_id, nombre, descripcion, precio, imagen, descuento))
             else:
-                cur.execute(f"INSERT INTO {tabla} (nombre, descripcion, precio, imagen) VALUES (%s,%s,%s,%s)",
-                    (nombre, descripcion, precio, imagen))
+                cur.execute(f"""
+                    INSERT INTO {tabla} (id, nombre, descripcion, precio, imagen)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (nuevo_id, nombre, descripcion, precio, imagen))
+
             conn.commit()
             cur.close()
             conn.close()
-            flash("✅ Producto agregado", "success")
+            flash(f"✅ Producto agregado correctamente con ID {nuevo_id}", "success")
         except Exception as e:
-            flash(f"⚠️ Error: {e}", "error")
+            flash(f"⚠️ Error al agregar producto: {e}", "error")
         return redirect(url_for("admin_productos"))
+
     return render_template("admin_agregar_producto.html")
+
 
 @app.route("/THE_PINK_DREAM/admin/eliminar_producto/<categoria>/<int:id>")
 @admin_required
@@ -274,38 +303,57 @@ def eliminar_producto(categoria,id):
         flash(f"⚠️ Error: {e}", "error")
     return redirect(url_for("admin_productos"))
 
-@app.route("/THE_PINK_DREAM/admin/editar_producto/<categoria>/<int:id>", methods=["GET","POST"])
+@app.route("/THE_PINK_DREAM/admin/editar_producto/<categoria>/<int:id>", methods=["GET", "POST"])
 @admin_required
-def editar_producto(categoria,id):
-    tabla={"base":"productos_base","ofertas":"productos_ofertas","nuevos":"productos_nuevos"}.get(categoria,"productos_base")
-    conn=conectar()
-    cur=conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    if request.method=="POST":
-        nombre=request.form["nombre"]
-        descripcion=request.form["descripcion"]
-        precio=float(request.form["precio"])
-        imagen=request.form["imagen"]
+def editar_producto(categoria, id):
+    tabla = {
+        "base": "productos_base",
+        "ofertas": "productos_ofertas",
+        "nuevos": "productos_nuevos"
+    }.get(categoria, "productos_base")
+
+    conn = conectar()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # Obtener producto actual
+    cur.execute(f"SELECT * FROM {tabla} WHERE id = %s", (id,))
+    producto = cur.fetchone()
+
+    if request.method == "POST":
+        nuevo_id = int(request.form["id"])  # ID modificado
+        nombre = request.form["nombre"]
+        descripcion = request.form["descripcion"]
+        precio = float(request.form["precio"])
+        imagen = request.form["imagen"]
+
         try:
-            if tabla=="productos_ofertas":
-                descuento=float(request.form.get("descuento",0))
-                cur.execute(f"UPDATE {tabla} SET nombre=%s, descripcion=%s, precio=%s, imagen=%s, descuento=%s WHERE id=%s",
-                    (nombre, descripcion, precio, imagen, descuento, id))
+            if tabla == "productos_ofertas":
+                descuento = float(request.form.get("descuento", 0))
+                cur.execute(f"""
+                    UPDATE {tabla} 
+                    SET id=%s, nombre=%s, descripcion=%s, precio=%s, imagen=%s, descuento=%s
+                    WHERE id=%s
+                """, (nuevo_id, nombre, descripcion, precio, imagen, descuento, id))
             else:
-                cur.execute(f"UPDATE {tabla} SET nombre=%s, descripcion=%s, precio=%s, imagen=%s WHERE id=%s",
-                    (nombre, descripcion, precio, imagen, id))
+                cur.execute(f"""
+                    UPDATE {tabla} 
+                    SET id=%s, nombre=%s, descripcion=%s, precio=%s, imagen=%s
+                    WHERE id=%s
+                """, (nuevo_id, nombre, descripcion, precio, imagen, id))
+            
             conn.commit()
-            flash("✅ Producto actualizado", "success")
+            flash("✅ Producto actualizado correctamente", "success")
         except Exception as e:
-            flash(f"⚠️ Error: {e}", "error")
+            flash(f"⚠️ Error al actualizar el producto: {e}", "error")
         finally:
             cur.close()
             conn.close()
         return redirect(url_for("admin_productos"))
-    cur.execute(f"SELECT * FROM {tabla} WHERE id=%s",(id,))
-    producto=cur.fetchone()
+
     cur.close()
     conn.close()
     return render_template("admin_editar_producto.html", producto=producto, categoria=categoria)
+
 
 # ----------------- ADMIN USUARIOS -----------------
 @app.route("/THE_PINK_DREAM/admin/usuarios")
