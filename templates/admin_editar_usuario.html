@@ -1,0 +1,22 @@
+{% include 'menu.html' %}
+<div class="container mt-4">
+    <h2>Editar Usuario</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="form-control" value="{{ usuario.nombre_completo }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" value="{{ usuario.email }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Rol</label>
+            <select name="rol" class="form-control" required>
+                <option value="usuario" {% if usuario.rol=='usuario' %}selected{% endif %}>Usuario</option>
+                <option value="admin" {% if usuario.rol=='admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </form>
+</div>

@@ -19,7 +19,7 @@
               <img src="{{ item.imagen }}" alt="{{ item.nombre }}" width="80">
               <div>
                 <strong>{{ item.nombre }}</strong><br>
-                <span>${{ "{:,}".format(item.precio) }}</span>
+                <p>${{ "{:,.0f}".format(item.precio|float) }}</p>
               </div>
             </div>
             <a href="/THE_PINK_DREAM/eliminar_carrito/{{ loop.index0 }}" 
@@ -29,7 +29,9 @@
       </ul>
 
       <div class="total-box">
-        <h4>Total a pagar: ${{ "{:,}".format(total) }}</h4>
+        
+      <h4>Total a pagar: ${{ "{:,.0f}".format(total|float) }}</h4>
+
       </div>
 
       <form method="POST" action="/THE_PINK_DREAM/finalizar_compra" class="mt-4">

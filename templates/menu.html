@@ -19,6 +19,16 @@
                     <a class="nav-link" href="/THE_PINK_DREAM/perfil">👤 Bienvenido, {{ session['nombre'] }}</a>
                 </li>
 
+                {% if session.get('rol') == 'admin' %}
+                    <!-- Opciones de admin -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/THE_PINK_DREAM/admin/productos">Gestionar Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/THE_PINK_DREAM/admin/usuarios">Gestionar Usuarios</a>
+                    </li>
+                {% endif %}
+
             {% else %}
                 <!-- Mostrar solo si el usuario NO está logueado -->
                 <li class="nav-item">
@@ -30,18 +40,17 @@
             {% endif %}
 
             <li class="nav-item">
-  <a class="nav-link" href="/THE_PINK_DREAM/carrito">
-    🛒 Carrito
-    {% if session.get('carrito') %}
-      <span class="badge badge-pill badge-success">
-        {{ session['carrito']|length }}
-      </span>
-    {% else %}
-      <span class="badge badge-pill badge-secondary">0</span>
-    {% endif %}
-  </a>
-</li>
-
+                <a class="nav-link" href="/THE_PINK_DREAM/carrito">
+                    🛒 Carrito
+                    {% if session.get('carrito') %}
+                        <span class="badge badge-pill badge-success">
+                            {{ session['carrito']|length }}
+                        </span>
+                    {% else %}
+                        <span class="badge badge-pill badge-secondary">0</span>
+                    {% endif %}
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

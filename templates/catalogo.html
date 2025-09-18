@@ -16,7 +16,7 @@
   </header>
   <center><br><h3>¡Conoce las últimas novedades de nuestra floristería!</h3></center>
   <section class="catalogo">
-      {% for p in productos.values() if p.id in [1,2] %}
+      {% for p in nuevos %}
         <div class="producto">
           <img src="{{ p.imagen }}" alt="{{ p.nombre }}" width="250px">
           <h3>{{ p.nombre }}</h3>
@@ -32,11 +32,14 @@
   </header>
   <center><br><h3>¡Aprovecha nuestras ofertas por tiempo limitado!</h3></center>
   <section class="catalogo">
-      {% for p in productos.values() if p.id in [3,4,5] %}
+      {% for p in ofertas %}
         <div class="producto">
           <img src="{{ p.imagen }}" alt="{{ p.nombre }}" width="250px">
           <h3>{{ p.nombre }}</h3>
-          <p><del>Precio anterior</del> | <strong>${{ "{:,}".format(p.precio) }}</strong></p>
+          <p>
+            <del>Precio anterior</del> |
+            <strong>${{ "{:,}".format(p.precio) }}</strong>
+          </p>
           <a href="/THE_PINK_DREAM/ramo/{{ p.id }}" class="btn btn-info mt-2">Ver más</a>
         </div>
       {% endfor %}
@@ -48,7 +51,7 @@
   </header>
   <center><br><h3>¡Encuentra el ramo perfecto para cualquier ocasión!</h3></center>
   <section class="catalogo">
-      {% for p in productos.values() if p.id not in [1,2,3,4,5] %}
+      {% for p in base %}
         <div class="producto">
           <img src="{{ p.imagen }}" alt="{{ p.nombre }}" width="250px">
           <h3>{{ p.nombre }}</h3>

@@ -1,0 +1,25 @@
+{% include 'menu.html' %}
+<div class="container mt-4">
+    <h2>👥 Gestión de Usuarios</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.nombre_completo }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.rol }}</td>
+                <td>
+                    <a href="{{ url_for('admin_editar_usuario', id=u.id) }}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{{ url_for('admin_eliminar_usuario', id=u.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
