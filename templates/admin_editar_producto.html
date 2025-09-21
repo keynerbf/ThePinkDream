@@ -1,28 +1,36 @@
 {% include 'menu.html' %}
 <div class="container mt-4">
     <h2>Editar Producto</h2>
-    <form method="POST">
-    <label>ID:</label>
-    <input type="number" name="id" value="{{ producto.id }}" required><br>
+    <!-- IMPORTANTE: enctype para subir archivos -->
+    <form method="POST" enctype="multipart/form-data">
+        
+        <label>ID:</label>
+        <input type="number" name="id" value="{{ producto.id }}" required><br>
 
-    <label>Nombre:</label>
-    <input type="text" name="nombre" value="{{ producto.nombre }}" required><br>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value="{{ producto.nombre }}" required><br>
 
-    <label>Descripción:</label>
-    <textarea name="descripcion" required>{{ producto.descripcion }}</textarea><br>
+        <label>Descripción:</label>
+        <textarea name="descripcion" required>{{ producto.descripcion }}</textarea><br>
 
-    <label>Precio:</label>
-    <input type="number" step="0.01" name="precio" value="{{ producto.precio }}" required><br>
+        <label>Precio:</label>
+        <input type="number" step="0.01" name="precio" value="{{ producto.precio }}" required><br>
 
-    <label>Imagen (URL):</label>
-    <input type="file" name="imagen" value="{{ producto.imagen }}"><br>
+        <label>Imagen:</label>
+        <!-- Input para subir nueva imagen -->
+        <input type="file" name="imagen" accept="image/*"><br>
 
-    {% if categoria == 'ofertas' %}
-        <label>Descuento (%):</label>
-        <input type="number" step="0.01" name="descuento" value="{{ producto.descuento }}"><br>
-    {% endif %}
+        {% if producto.imagen_url %}
+            <!-- Mostrar la imagen actual -->
+            <p>Imagen actual:</p>
+            <img src="{{ producto.imagen_url }}" alt="Imagen del producto" width="150"><br>
+        {% endif %}
 
-    <button type="submit" class="btn btn-success mt-2">Guardar cambios</button>
-</form>
+        {% if categoria == 'ofertas' %}
+            <label>Descuento (%):</label>
+            <input type="number" step="0.01" name="descuento" value="{{ producto.descuento }}"><br>
+        {% endif %}
 
+        <button type="submit" class="btn btn-success mt-2">Guardar cambios</button>
+    </form>
 </div>

@@ -3,10 +3,25 @@ from config import conectar
 import psycopg2
 import psycopg2.extras
 from functools import wraps
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 app.secret_key = "clave_segura"
 
+# Carpeta donde se guardarán las imágenes
+UPLOAD_FOLDER = os.path.join("static", "nuevas_fotos")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # crea la carpeta si no existe
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Extensiones permitidas
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           
 # ----------------- HELPERS -----------------
 def get_current_user():
     usuario = session.get("usuario")
@@ -231,6 +246,7 @@ def admin_productos():
     conn.close()
     return render_template("admin_productos.html", base=base, ofertas=ofertas, nuevos=nuevos)
 
+# ------------------- AGREGAR PRODUCTO -------------------
 @app.route("/THE_PINK_DREAM/admin/agregar_producto", methods=["GET", "POST"])
 @admin_required
 def agregar_producto():
@@ -238,9 +254,19 @@ def agregar_producto():
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"]
         precio = float(request.form["precio"])
-        imagen = request.form["imagen"]
         categoria = request.form["categoria"]  # "base", "ofertas", "nuevos"
+        imagen_file = request.files.get("imagen")
 
+        # Guardar imagen en /static/nuevas_fotos/
+        if imagen_file and imagen_file.filename:
+            filename = secure_filename(imagen_file.filename)
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            imagen_file.save(filepath)
+            imagen = f"/static/nuevas_fotos/{filename}"
+        else:
+            imagen = "/static/default.jpg"
+
+        # Determinar tabla según categoría
         tabla = {
             "base": "productos_base",
             "ofertas": "productos_ofertas",
@@ -251,9 +277,7 @@ def agregar_producto():
             conn = conectar()
             cur = conn.cursor()
 
-            # -------------------
-            # Calcular ID automático
-            # -------------------
+            # Calcular ID automático (máximo entre todas las tablas)
             cur.execute("SELECT MAX(id) FROM productos_base")
             max_base = cur.fetchone()[0] or 0
 
@@ -305,6 +329,8 @@ def eliminar_producto(categoria,id):
         flash(f"⚠️ Error: {e}", "error")
     return redirect(url_for("admin_productos"))
 
+
+# ------------------- EDITAR PRODUCTO -------------------
 @app.route("/THE_PINK_DREAM/admin/editar_producto/<categoria>/<int:id>", methods=["GET", "POST"])
 @admin_required
 def editar_producto(categoria, id):
@@ -316,17 +342,26 @@ def editar_producto(categoria, id):
 
     conn = conectar()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
+
     # Obtener producto actual
     cur.execute(f"SELECT * FROM {tabla} WHERE id = %s", (id,))
     producto = cur.fetchone()
 
     if request.method == "POST":
-        nuevo_id = int(request.form["id"])  # ID modificado
+        nuevo_id = int(request.form["id"])
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"]
         precio = float(request.form["precio"])
-        imagen = request.form["imagen"]
+        imagen_file = request.files.get("imagen")
+
+        # Si sube una nueva imagen -> guardarla
+        if imagen_file and imagen_file.filename:
+            filename = secure_filename(imagen_file.filename)
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            imagen_file.save(filepath)
+            imagen = f"/static/nuevas_fotos/{filename}"
+        else:
+            imagen = producto["imagen"]  # mantener la anterior
 
         try:
             if tabla == "productos_ofertas":
@@ -342,7 +377,7 @@ def editar_producto(categoria, id):
                     SET id=%s, nombre=%s, descripcion=%s, precio=%s, imagen=%s
                     WHERE id=%s
                 """, (nuevo_id, nombre, descripcion, precio, imagen, id))
-            
+
             conn.commit()
             flash("✅ Producto actualizado correctamente", "success")
         except Exception as e:
