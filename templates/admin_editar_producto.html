@@ -15,7 +15,7 @@
     <input type="number" step="0.01" name="precio" value="{{ producto.precio }}" required><br>
 
     <label>Imagen (URL):</label>
-    <input type="text" name="imagen" value="{{ producto.imagen }}"><br>
+    <input type="file" name="imagen" value="{{ producto.imagen }}"><br>
 
     {% if categoria == 'ofertas' %}
         <label>Descuento (%):</label>

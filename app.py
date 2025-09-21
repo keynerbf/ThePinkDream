@@ -34,8 +34,10 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+
 # ----------------- INICIO -----------------
-@app.route("/THE_PINK_DREAM")
+@app.route("/")
 def index():
     return render_template("index.html")
 
@@ -186,11 +188,11 @@ def finalizar_compra():
 def catalogo():
     conn = conectar()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM productos_base")
+    cur.execute("SELECT * FROM productos_base ORDER BY id ASC")
     base = cur.fetchall()
-    cur.execute("SELECT * FROM productos_ofertas")
+    cur.execute("SELECT * FROM productos_ofertas ORDER BY id ASC")
     ofertas = cur.fetchall()
-    cur.execute("SELECT * FROM productos_nuevos")
+    cur.execute("SELECT * FROM productos_nuevos ORDER BY id ASC")
     nuevos = cur.fetchall()
     cur.close()
     conn.close()
@@ -219,11 +221,11 @@ def ramo(ramo_id):
 def admin_productos():
     conn = conectar()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cur.execute("SELECT * FROM productos_base")
+    cur.execute("SELECT * FROM productos_base ORDER BY id ASC")
     base = cur.fetchall()
-    cur.execute("SELECT * FROM productos_ofertas")
+    cur.execute("SELECT * FROM productos_ofertas ORDER BY id ASC")
     ofertas = cur.fetchall()
-    cur.execute("SELECT * FROM productos_nuevos")
+    cur.execute("SELECT * FROM productos_nuevos ORDER BY id ASC")
     nuevos = cur.fetchall()
     cur.close()
     conn.close()
