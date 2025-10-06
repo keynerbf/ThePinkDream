@@ -11,9 +11,18 @@
   <div class="container mt-5">
     <h2>{{ ramo.nombre }}</h2>
     <img src="{{ ramo.imagen }}" class="img-fluid" alt="{{ ramo.nombre }}">
-    <p class="mt-3">Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-    <h4>Precio: ${{ ramo.precio }}</h4>
-    <a href="/THE_PINK_DREAM/agregar_carrito/{{ ramo.id }}" class="btn btn-success">Agregar al carrito</a>
+    <p class="mt-3"><strong>Descripción:</strong> {{ ramo.descripcion }}</p>
+    <h4>Precio: ${{ "{:,.2f}".format(ramo.precio) }}</h4>
+
+    {% if ramo.get("descuento") %}
+      <p><strong>Descuento:</strong> {{ ramo.descuento }}%</p>
+      <p><strong>Precio con descuento:</strong>
+        ${{ "{:,.2f}".format(ramo.precio * (1 - ramo.descuento / 100)) }}
+      </p>
+    {% endif %}
+    <a href="{{ url_for('agregar_carrito', ramo_id=ramo.id) }}" class="btn btn-success">
+      Agregar al carrito
+    </a>
   </div>
 </body>
 </html>

@@ -14,32 +14,49 @@
     {% if carrito %}
       <ul class="list-group mb-3">
         {% for item in carrito %}
-          <li class="list-group-item producto-carrito">
-            <div class="producto-info">
-              <img src="{{ item.imagen }}" alt="{{ item.nombre }}" width="80">
+          <li class="list-group-item producto-carrito d-flex justify-content-between align-items-center">
+            
+            <div class="d-flex align-items-center">
+              <img src="{{ item.imagen }}" alt="{{ item.nombre }}" width="80" class="me-3 rounded">
               <div>
                 <strong>{{ item.nombre }}</strong><br>
-                <p>${{ "{:,.0f}".format(item.precio|float) }}</p>
+
+                {% if item.descuento and item.descuento|float > 0 %}
+                  <del class="text-muted">
+                    ${{ "{:,.0f}".format(item.precio|float) }}
+                  </del><br>
+                  <span class="text-success fw-bold">
+                    ${{ "{:,.0f}".format(item.precio_final|float) }}
+                  </span>
+                  <small class="text-danger">(-{{ item.descuento }}%)</small>
+                {% else %}
+                  <span class="fw-bold">
+                    ${{ "{:,.0f}".format(item.precio_final|float) }}
+                  </span>
+                {% endif %}
               </div>
             </div>
+
             <a href="/THE_PINK_DREAM/eliminar_carrito/{{ loop.index0 }}" 
                class="btn btn-danger btn-sm">Eliminar</a>
           </li>
         {% endfor %}
       </ul>
 
-      <div class="total-box">
-        
-      <h4>Total a pagar: ${{ "{:,.0f}".format(total|float) }}</h4>
-
+      <div class="total-box text-end">
+        <h4>Total a pagar: 
+          <span class="text-success">
+            ${{ "{:,.0f}".format(total|float) }}
+          </span>
+        </h4>
       </div>
 
       <form method="POST" action="/THE_PINK_DREAM/finalizar_compra" class="mt-4">
-        <div class="form-group">
+        <div class="form-group mb-3">
           <label for="direccion">Dirección de envío:</label>
           <input type="text" name="direccion" id="direccion" class="form-control" required>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
           <label for="pago">💳 Método de pago:</label>
           <select name="pago" id="pago" class="form-control" required>
             <option value="">Seleccione...</option>
@@ -50,7 +67,7 @@
             <option value="Efectivo">Efectivo</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-3">
           <label for="num_pago">Número del método de pago:</label>
           <input type="text" name="num_pago" id="num_pago" class="form-control" required>
         </div>

@@ -137,28 +137,47 @@ def perfil():
 def agregar_carrito(ramo_id):
     if "carrito" not in session:
         session["carrito"] = []
+
     conn = conectar()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     producto = None
+
     for tabla in ["productos_base", "productos_ofertas", "productos_nuevos"]:
         cur.execute(f"SELECT * FROM {tabla} WHERE id=%s", (ramo_id,))
         producto = cur.fetchone()
         if producto:
             break
+
     cur.close()
     conn.close()
+
     if producto:
-        session["carrito"].append(dict(producto))
+        # Convertimos a dict para trabajar
+        item = dict(producto)
+
+        # Verificamos si tiene descuento
+        descuento = float(item.get("descuento", 0) or 0)
+        precio = float(item["precio"])
+
+        if descuento > 0:
+            item["precio_final"] = precio * (1 - descuento / 100)
+        else:
+            item["precio_final"] = precio
+
+        session["carrito"].append(item)
         session.modified = True
+
     return redirect(url_for("catalogo"))
+
 
 @app.route("/THE_PINK_DREAM/carrito")
 def carrito():
     if "usuario" not in session:
         flash("⚠️ Debes iniciar sesión para acceder al carrito", "error")
         return redirect(url_for("iniciar_sesion"))
+
     carrito = session.get("carrito", [])
-    total = sum(float(item["precio"]) for item in carrito)
+    total = sum(float(item["precio_final"]) for item in carrito)  # 🔑 usar precio_final
     return render_template("carrito.html", carrito=carrito, total=total)
 
 @app.route("/THE_PINK_DREAM/eliminar_carrito/<int:index>")
