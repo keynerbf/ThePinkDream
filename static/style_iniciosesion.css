@@ -1,0 +1,119 @@
+/* 🌸 ESTILO ADAPTADO PARA LA PÁGINA DE INICIO DE SESIÓN (Bootstrap) 🌸 */
+body {
+  background: linear-gradient(135deg, #ffe6f2, #ffd6eb, #fff0f5);
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(255, 182, 193, 0.4);
+  padding: 40px 60px;
+  max-width: 450px;
+  margin: auto;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+  z-index: 1;
+}
+
+/* 🔧 Ajuste: el fondo decorativo no bloquea los inputs */
+.container::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle at 20% 20%, #ffb6c1, transparent 60%);
+  opacity: 0.2;
+  z-index: -1; /* ✅ ahora está detrás del contenido */
+}
+
+h2 {
+  color: #ff6fa3;
+  font-size: 2em;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px #ffcce0;
+  position: relative;
+  z-index: 1;
+}
+
+/* 🌸 Estilo para etiquetas y campos del formulario */
+label {
+  color: #d47fa6;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.form-control {
+  border: 2px solid #ffb6c1;
+  border-radius: 10px;
+  padding: 12px;
+  background-color: #fffafc;
+  transition: 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.form-control:focus {
+  border-color: #ff6fa3;
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
+}
+
+/* 🌸 Botón */
+.btn-primary {
+  background-color: #ff6fa3;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1.1em;
+  width: 100%;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1;
+  position: relative;
+}
+
+.btn-primary:hover {
+  background-color: #ff4d88;
+  transform: scale(1.05);
+}
+
+/* 🌸 Alertas Flask */
+.alert-success {
+  background-color: #ffe6f2;
+  color: #ff4d88;
+  border: 1px solid #ffb6c1;
+}
+
+.alert-danger {
+  background-color: #fff0f5;
+  color: #d63384;
+  border: 1px solid #ffb6c1;
+}
+
+/* 🌸 Animación */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🌸 Responsivo */
+@media (max-width: 480px) {
+  .container {
+    padding: 30px;
+    width: 90%;
+  }
+
+  h2 {
+    font-size: 1.6em;
+  }
+}

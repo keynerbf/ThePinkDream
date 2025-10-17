@@ -59,7 +59,11 @@
             <button type="submit" class="btn btn-primary">Registrar usuario</button>
             <a href="/THE_PINK_DREAM" class="btn btn-primary">Ir al inicio</a>
         </form>
-  </div>
+        
+    </div>
+    {% if mensaje %}
+        <div class="mensaje {{ tipo }}">{{ mensaje }}</div>
+    {% endif %}
 </body>
 </html>
 

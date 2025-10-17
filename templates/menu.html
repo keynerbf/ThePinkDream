@@ -22,7 +22,7 @@
                         <a class="nav-link" href="/THE_PINK_DREAM/cerrar_sesion">Cerrar sesión</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/THE_PINK_DREAM/perfil">  Bienvenido, {{ session['nombre'] }}</a>
+                        <a class="nav-link">  Bienvenido, {{ session['nombre'] }}</a>
                     </li>
                     {% if session.get('rol') == 'admin' %}
                         <!-- Opciones de admin -->

@@ -59,27 +59,42 @@ def index():
 # ----------------- REGISTRO -----------------
 @app.route("/THE_PINK_DREAM/registro", methods=["GET", "POST"])
 def registrar():
+    mensaje = None
+    tipo = None
+
     if request.method == "POST":
         documento = request.form["documento"]
         nombre_completo = request.form["nombre_completo"]
         email = request.form["email"]
         contraseña = request.form["contraseña"]
         rol = 'usuario'
-        try:
-            conn = conectar()
-            cur = conn.cursor()
-            cur.execute(
-                "INSERT INTO registro (id, nombre_completo, email, contraseña, rol) VALUES (%s, %s, %s, %s, %s)",
-                (documento, nombre_completo, email, contraseña, rol),
-            )
-            conn.commit()
-            cur.close()
-            conn.close()
-            flash("✅ Usuario registrado con éxito", "success")
-            return redirect(url_for("iniciar_sesion"))
-        except Exception as e:
-            flash(f"⚠️ Error al registrar: {e}", "error")
-    return render_template("registro.html")
+
+        # --- Validaciones previas ---
+        import re
+        if not documento.isdigit() or len(documento) < 7:
+            mensaje = "⚠️ El número de documento debe tener al menos 7 dígitos numéricos."
+            tipo = "error"
+        elif not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+            mensaje = "⚠️ El correo electrónico no tiene un formato válido."
+            tipo = "error"
+        else:
+            try:
+                conn = conectar()
+                cur = conn.cursor()
+                cur.execute(
+                    "INSERT INTO registro (id, nombre_completo, email, contraseña, rol) VALUES (%s, %s, %s, %s, %s)",
+                    (documento, nombre_completo, email, contraseña, rol),
+                )
+                conn.commit()
+                cur.close()
+                conn.close()
+                mensaje = "✅ Usuario registrado con éxito. ¡Bienvenido a The Pink Dream!"
+                tipo = "exito"
+            except Exception as e:
+                mensaje = f"⚠️ Error al registrar: {e}"
+                tipo = "error"
+
+    return render_template("registro.html", mensaje=mensaje, tipo=tipo)
 
 # ----------------- LOGIN -----------------
 @app.route("/THE_PINK_DREAM/iniciar_sesion", methods=["GET", "POST"])

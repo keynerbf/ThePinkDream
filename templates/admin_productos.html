@@ -1,23 +1,29 @@
 {% include 'menu.html' %}
+<link rel="stylesheet" href="/static/style_admin.css">
 <div class="container mt-4">
-    <h2>🛠️ Gestión de Productos</h2>
-    <a href="{{ url_for('agregar_producto') }}" class="btn btn-success mb-3">Agregar Producto</a>
-
+    <div class="content">
+        <div class="header">
+            <h2>🛠️ Gestión de Productos</h2>
+            <a href="{{ url_for('agregar_producto') }}" class="btn btn-success mb-3">Agregar Producto</a>
+        </div>
+    
+    
     <h4>Productos Base</h4>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th><th>Nombre</th><th>Precio</th><th>Imagen</th><th>Acciones</th>
+                <th>ID</th><th>Nombre</th><th>Descripcion</th><th>Precio</th><th>Imagen</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for p in base %}
             <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>${{ "{:,.2f}".format(p.precio) }}</td>
-                <td><img src="{{ p.imagen }}" width="60"></td>
-                <td>
+                <td class="id_base">{{ p.id }}</td>
+                <td class="nombre_base">{{ p.nombre }}</td>
+                <td class="descripcion_base">{{ p.descripcion }}</td>
+                <td class="precio_base">${{ "{:,.2f}".format(p.precio) }}</td>
+                <td class="imagen_base"><img src="{{ p.imagen }}" width="60"></td>
+                <td class="acciones">
                     <a href="{{ url_for('editar_producto', categoria='base', id=p.id) }}" class="btn btn-primary btn-sm">Editar</a>
                     <a href="{{ url_for('eliminar_producto', categoria='base', id=p.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
                 </td>
@@ -26,22 +32,23 @@
         </tbody>
     </table>
 
-    <h4>Ofertas</h4>
+    <h4>Productos en oferta</h4>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th><th>Nombre</th><th>Precio</th><th>Descuento</th><th>Imagen</th><th>Acciones</th>
+                <th>ID</th><th>Nombre</th><th>Descripcion</th><th>Precio</th><th>Descuento</th><th>Imagen</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for p in ofertas %}
             <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>${{ "{:,.2f}".format(p.precio) }}</td>
-                <td>{{ p.descuento }}%</td>
-                <td><img src="{{ p.imagen }}" width="60"></td>
-                <td>
+                <td class="id_of">{{ p.id }}</td>
+                <td class="nombre_of">{{ p.nombre }}</td>
+                <td class="descripcion_of">{{ p.descripcion }}</td>
+                <td class="precio_of">${{ "{:,.2f}".format(p.precio) }}</td>
+                <td class="descuento_of">{{ p.descuento }}%</td>
+                <td class="imagen_of"><img src="{{ p.imagen }}" width="60"></td>
+                <td class="acciones">
                     <a href="{{ url_for('editar_producto', categoria='ofertas', id=p.id) }}" class="btn btn-primary btn-sm">Editar</a>
                     <a href="{{ url_for('eliminar_producto', categoria='ofertas', id=p.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
                 </td>
@@ -50,21 +57,22 @@
         </tbody>
     </table>
 
-    <h4>Nuevos</h4>
+    <h4>Productos nuevos</h4>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th><th>Nombre</th><th>Precio</th><th>Imagen</th><th>Acciones</th>
+                <th>ID</th><th>Nombre</th><th>Descripcion</th><th>Precio</th><th>Imagen</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for p in nuevos %}
             <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>${{ "{:,.2f}".format(p.precio) }}</td>
-                <td><img src="{{ p.imagen }}" width="60"></td>
-                <td>
+                <td class="id_new">{{ p.id }}</td>
+                <td class="nombre_new">{{ p.nombre }}</td>
+                <td class="descripcion_new">{{ p.descripcion }}</td>
+                <td class="precio_new">${{ "{:,.2f}".format(p.precio) }}</td>
+                <td class="imagen_new"><img src="{{ p.imagen }}" width="60"></td>
+                <td class="acciones">
                     <a href="{{ url_for('editar_producto', categoria='nuevos', id=p.id) }}" class="btn btn-primary btn-sm">Editar</a>
                     <a href="{{ url_for('eliminar_producto', categoria='nuevos', id=p.id) }}" class="btn btn-danger btn-sm">Eliminar</a>
                 </td>
@@ -72,4 +80,5 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>

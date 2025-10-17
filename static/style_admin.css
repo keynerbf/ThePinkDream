@@ -1,0 +1,116 @@
+
+.header{
+    display: grid;
+    grid-template-columns: 8fr 1fr;
+    margin-bottom: 20px;
+    padding: 5px;
+    width: 100%;
+    background-color: pink;
+    border-radius: 25px;
+}
+.header h2{
+    justify-self: start;
+    align-self: center;
+    margin: 0;
+}
+.header a{
+    text-decoration: none;
+    background-color: white;
+    color: palevioletred;
+    border-radius: 25px;
+    padding: 5px 20px;
+    border: 2px solid palevioletred;
+}
+.header:hover a{
+    background-color: palevioletred;
+    color: white;
+}   
+
+.content {
+    flex: 100;
+    margin: 0px 20px;
+}
+
+.content h4{
+    text-align: center;
+    justify-self: start;;
+    margin: 30px 0 0;
+    color: black;
+    border-radius: 20px;
+    padding: 25px;
+    background-color: palevioletred;
+    font-size: large;
+}
+
+.id_base{
+    width: 5%;
+}
+.nombre_base{
+    width: 20%;
+}
+.descripcion_base{
+    width: 35%;
+}
+.precio_base{
+    width: 10%;
+}
+.imagen_base{
+    width: 15%;
+}
+
+
+.id_of{
+    width: 5%;
+}
+.nombre_of{
+    width: 20%;
+}
+.descripcion_of{
+    width: 35%;
+}
+.precio_of{
+    width: 10%;
+}
+.descuento_of{
+    width: 10%;
+}
+.imagen_of{
+    width: 10%;
+}
+
+.id_new{
+    width: 5%;
+}
+.nombre_new{
+    width: 20%;
+}
+.descripcion_new{
+    width: 35%;
+}
+.precio_new{
+    width: 10%;
+}
+.imagen_new{
+    width: 15%;
+}
+
+.acciones{
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+.acciones a{
+    padding: 15px ;
+    margin: 10px;
+    text-decoration: none;
+    border-radius: 20px;
+    background-color: palevioletred;
+    color: white;
+}
+
+.acciones a:active {
+    background-color: rgb(54, 46, 48); 
+    transform: scale(0.95);
+}
